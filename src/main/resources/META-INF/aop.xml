@@ -1,0 +1,10 @@
+<aspectj>
+    <aspects>
+        <aspect name="eu.gobio.jape.tracker.RegularTracker"/>
+        <aspect name="eu.gobio.jape.tracker.RXJavaTracker"/>
+    </aspects>
+    <weaver>
+        <include within="*"/>
+        <include within="io.reactivex..*"/>
+    </weaver>
+</aspectj>
