@@ -1,10 +1,10 @@
 # Java Application Performance Explained
 
-##Why use Jape?
+## Why use Jape?
 Jape can help you to understand and optimize the performance of complicated processes visualizing execution time and dependencies between process's stages. In modern Java application which uses 
 asynchronous computing with tools like CompletableFuture, parallel streams or RXJava it's sometimes tricky to see which parts are executed sequentially and which parallelly and what stages should be optimized to optimize the whole process.
 
-##Example
+## Example
 In the following example, you can see the synchronous process:
 ![Synchronous example](http://gobio.eu/jape/media/jape_synchronous_example.png)
 The diagram shows that **compute** stage lasts about 9s and consists of stages 
@@ -35,5 +35,5 @@ your browser. Wait a while to finish some computation and click selected trace t
 show the chart:
     ![Example](http://gobio.eu/jape/media/jape_example.png)
 
-##Warning
+## Warning
 The project is at the early experimental stage and should not be used in a production environment.
