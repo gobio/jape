@@ -1,19 +1,44 @@
-group 'eu.gobio.jape'
-version '1.0-SNAPSHOT'
+plugins {
+    id "java"
+    id "java-library"
+    id "maven-publish"
+    id "com.jfrog.bintray" version "1.8.0"
+}
 
-apply plugin: 'java'
-apply plugin: 'maven-publish'
+group 'eu.gobio.jape'
+version '1.0'
+
 
 sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
-    mavenLocal()
 }
+
+bintray {
+    user = findProperty('user')
+    key = findProperty('key')
+    publications = ['maven']
+    publish = true
+    pkg {
+        repo = 'main'
+        name = project.name
+        version {
+            name = project.version
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier 'sources'
+}
+
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        maven(MavenPublication) {
             from components.java
+            artifact sourcesJar
         }
     }
 }
