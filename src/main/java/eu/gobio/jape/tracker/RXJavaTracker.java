@@ -16,8 +16,9 @@ public class RXJavaTracker extends AbstractTracker {
     public void onSubscribe(Observable observable, Observer observer) {
     }
 
+    @SuppressWarnings("unchecked")
     @Around("onSubscribe(observable,observer)")
     public Object aroundOnSubscribe(ProceedingJoinPoint jp, Observable observable, Observer observer) throws Throwable {
-        return new ObserverWrapper<>((Observer) jp.proceed(), Trace.currentStage());
+        return new ObserverWrapper((Observer) jp.proceed(), Trace.currentStage());
     }
 }
