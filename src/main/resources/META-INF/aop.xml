@@ -3,8 +3,10 @@
         <aspect name="eu.gobio.jape.tracker.RegularTracker"/>
         <aspect name="eu.gobio.jape.tracker.RXJavaTracker"/>
     </aspects>
-    <weaver>
+    <weaver options="-warn:none">
         <include within="*"/>
         <include within="io.reactivex..*"/>
+        <exclude within="java..*"/>
+        <exclude within="javax..*"/>
     </weaver>
 </aspectj>
