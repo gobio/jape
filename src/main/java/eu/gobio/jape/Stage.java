@@ -9,6 +9,7 @@ import java.util.Objects;
 public class Stage {
 
     private static Logger startLogger = LoggerFactory.getLogger("jape.stage.start");
+    private static Logger flowLogger = LoggerFactory.getLogger("jape.stage.flow");
     private static Logger finishLogger = LoggerFactory.getLogger("jape.stage.end");
 
     private final Trace trace;
@@ -19,7 +20,8 @@ public class Stage {
     private String threadName;
     private Stage parent;
     private int level = 0;
-
+    private Flow flow;
+    private boolean ephemeral;
 
     public Stage() {
         this(new Trace());
@@ -31,16 +33,26 @@ public class Stage {
         this.trace.addStage(this);
     }
 
+
     public Stage(Stage parent) {
         this(parent.trace);
         this.parent = parent;
         this.level = parent != null ? parent.level + 1 : 0;
     }
 
-    public void start(String name) {
-        this.startTime = System.currentTimeMillis();
+    public void startEphemeral(String name) {
+        saveState(name);
+        this.ephemeral = true;
+    }
+
+    private void saveState(String name) {
+        this.startTime = System.nanoTime();
         this.threadName = Thread.currentThread().getName();
         this.name = name;
+    }
+
+    public void start(String name) {
+        saveState(name);
 
         logStart();
     }
@@ -54,6 +66,17 @@ public class Stage {
                 startTime,
                 name,
                 threadName);
+        if (flow != null) {
+            flowLogger.info("{\"trace\":\"{}\", \"stage\":{},\"value\":{},\"from\":{}",
+                    trace.getId(),
+                    stageId,
+                    flow.getValue(),
+                    flow.getFrom() != null ? flow.getFrom().getStageId() : null);
+        }
+    }
+
+    public int getStageId() {
+        return stageId;
     }
 
     public long getStartTime() {
@@ -86,8 +109,23 @@ public class Stage {
         return Objects.hash(trace, stageId);
     }
 
+    public Flow getFlow() {
+        return flow;
+    }
+
+    public void setFlow(Flow flow) {
+        this.flow = flow;
+    }
+
+    public boolean isEphemeral() {
+        return ephemeral;
+    }
+
     void finish() {
-        this.finishTime = System.currentTimeMillis();
+        this.finishTime = System.nanoTime();
+        if (ephemeral) {
+            logStart();
+        }
         logEnd();
     }
 
